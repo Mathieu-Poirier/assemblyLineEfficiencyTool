@@ -7,7 +7,7 @@ A full-stack project designed to visualize manufacturing efficiency by tracking 
 ## Features
 
 - Real-time data visualization
-- WebSocket communication
+- WebSocket server communication
 - PostgreSQL database communication
 
 ## Technology Stack
