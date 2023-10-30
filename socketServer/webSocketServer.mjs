@@ -2,10 +2,21 @@ import express from 'express';
 import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import pg from 'pg';
+import cors from 'cors';
+
 
 const app = express();
 const server = http.createServer(app);
-const io = new SocketIOServer(server);
+const io = new SocketIOServer(server, {
+  cors: {
+    origin: 'http://localhost:4200',
+    methods: ['GET', 'POST'],
+  },
+});
+
+app.options('*', cors({ origin: 'http://localhost:4200' }));
+app.use(cors());
+
 
 // Database configuration
 const dbConfig = {
