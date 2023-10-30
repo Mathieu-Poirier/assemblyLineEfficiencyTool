@@ -38,6 +38,14 @@ pool.connect((err, client, done) => {
     return;
   }
 
+function calculatePartsMadePerMinute(data) {
+    const currentTime = new Date().getTime();
+    const timeDifference = (currentTime - data.timestamp) / 60000; // Convert to minutes
+    const partsMadePerMinute = data.parts_made / timeDifference;
+    return partsMadePerMinute;
+  }
+  
+
   // Add a listener for the "data_update" channel
   client.query('LISTEN data_update');
 
@@ -45,9 +53,10 @@ pool.connect((err, client, done) => {
     if (notification.channel === 'data_update') {
       // Handle the data update here, fetch the updated data from the database
       // In this example, we query the database for the updated data
-      client.query('SELECT parts_made FROM efficiency', (err, result) => {
-        if (!err) {
-          sendUpdatedData(result.rows[0]);
+      client.query('SELECT parts_made, timestamp FROM efficiency', (err, result) => {
+        if (!err && result.rows.length > 0) {
+          const updatedData = result.rows[0];
+          sendUpdatedData(updatedData);
         }
       });
     }
