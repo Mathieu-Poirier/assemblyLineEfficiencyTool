@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { io } from 'socket.io-client';
+import * as d3 from 'd3'; // Import D3.js
 
 @Component({
   selector: 'app-root',
