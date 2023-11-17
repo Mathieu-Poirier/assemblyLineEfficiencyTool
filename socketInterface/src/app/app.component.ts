@@ -62,20 +62,31 @@ export class AppComponent implements OnInit {
     // Use Angular renderer to access the SVG container
     const element = this.chartContainer.nativeElement;
 
-    const margin = { top: 20, right: 20, bottom: 50, left: 50 };
-    const width = 700 - margin.left - margin.right;
-    const height = 400 - margin.top - margin.bottom;
+    const margin = { top: 40, right: 20, bottom: 50, left: 50 };
+    const marginTitle = { top: 200 }; // Adjust this margin for the title
+    const width = 700 
+    const height = 500
 
     const svg = d3.select(element)
-      .append('svg')
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-      .append('g')
-      .attr('transform', `translate(${margin.left},${margin.top})`);
+    .append('svg')
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bottom + marginTitle.top)
+    .append('g')
+    .attr('transform', `translate(${margin.left},${margin.top + marginTitle.top})`);
 
-    // Add any additional initialization code for your chart here
-    this.svg = svg;
-    
+
+    svg.append('text')
+      .attr('class', 'chart-title')
+      .attr('x', width / 2)
+      .attr('y', -marginTitle.top / 2)
+      .attr('text-anchor', 'middle')
+      .attr('fill', 'white') // Set text color to white
+      .style('font-size', '1.5em')
+      .style('font-weight', 'bold')
+      .style('font-family', 'sans-serif') // Replace 'Your Modern Font' with the desired font
+      .text('Parts Made Per Minute');
+
+      this.svg = svg;
   }
   
   private updateChart() {
@@ -103,26 +114,45 @@ export class AppComponent implements OnInit {
     // Enter: Add new bars for new data
     const newBars = bars.enter()
       .append('rect')
-      .attr('fill', 'blue');
+      .attr('fill', 'orange');
   
     // Update: Update the position and height of existing bars
     bars.merge(newBars)
+      .transition()
+      .duration(200) // Set the duration of the transition (in milliseconds)
+      .ease(d3.easeCubicInOut) // Set easing function (e.g., bounceOut)
       .attr('x', (__: any, i: number) => xScale(i))
       .attr('y', (d: number) => yScale(d))
       .attr('width', barWidth)
       .attr('height', (d: number) => 400 - yScale(d));
     
-    this.svg.select('.x-axis')
-      .call(d3.axisBottom(xScale));
+    const textLabels = this.svg.selectAll('.bar-label')
+      .data(this.data);
+  
+    textLabels.exit().remove(); // Remove text labels for bars that don't have data
+  
+    textLabels.enter()
+    .append('text')
+    .attr('class', 'bar-label')
+    .attr('fill', 'white')
+    .attr('text-anchor', 'middle')
+    .attr('x', (__: any, i: number) => xScale(i) + barWidth / 2)
+    .attr('y', (d: number) => yScale(d) - 5) // Adjust this value to control the distance from the top of the bar
+    .text((d: number) => Math.round(d).toString());
 
-    this.svg.select('.y-axis')
-      .call(d3.axisLeft(yScale));
+  // Update: Update the position of text labels
+  textLabels.transition()
+    .duration(200)
+    .ease(d3.easeCubicInOut)
+    .attr('x', (__: any, i: number) => xScale(i) + barWidth / 2)
+    .attr('y', (d: number) => yScale(d) - 5) // Update the y-position based on yScale
+    .text((d: number) => Math.round(d).toString()); // Display rounded partsmadeper minute values
+  
     
       // Ensure not more than maxBars are displayed
     if (this.data.length > maxBars) {
       this.data.shift();
     }
-    
   }  
 }
 

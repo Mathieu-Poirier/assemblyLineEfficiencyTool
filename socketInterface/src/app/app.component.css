@@ -5,5 +5,6 @@ div {
     text-align: center;
     min-height: 100vh;
     overflow: auto; /* Add overflow property */
-    border: 25px solid blueviolet; /* Set border property with color */
 }
+
+
