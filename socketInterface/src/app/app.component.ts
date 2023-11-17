@@ -12,6 +12,8 @@ export class AppComponent implements OnInit {
   public data: any[] = []; // Array to store data over time
   public partsMadePerMinute: number | null = null;
   public svg: any;
+  public xScale: any;
+  public yScale: any;
 
   @ViewChild('chartContainer', { static: true }) private chartContainer!: ElementRef;
 
@@ -59,23 +61,21 @@ export class AppComponent implements OnInit {
   private createChart() {
     // Use Angular renderer to access the SVG container
     const element = this.chartContainer.nativeElement;
-    
-    const width = 700;
-    const height = 400;
+
+    const margin = { top: 20, right: 20, bottom: 50, left: 50 };
+    const width = 700 - margin.left - margin.right;
+    const height = 400 - margin.top - margin.bottom;
 
     const svg = d3.select(element)
       .append('svg')
-      .attr('width', width)
-      .attr('height', height);
-    
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    d3.select(element)
-    .style('display', 'flex')
-    .style('justify-content', 'center')
-    .style('min-height', '100vh')
-    .style('overflow', 'auto')
     // Add any additional initialization code for your chart here
     this.svg = svg;
+    
   }
   
   private updateChart() {
@@ -111,11 +111,18 @@ export class AppComponent implements OnInit {
       .attr('y', (d: number) => yScale(d))
       .attr('width', barWidth)
       .attr('height', (d: number) => 400 - yScale(d));
-  
-    // Ensure not more than maxBars are displayed
+    
+    this.svg.select('.x-axis')
+      .call(d3.axisBottom(xScale));
+
+    this.svg.select('.y-axis')
+      .call(d3.axisLeft(yScale));
+    
+      // Ensure not more than maxBars are displayed
     if (this.data.length > maxBars) {
       this.data.shift();
     }
+    
   }  
 }
 
