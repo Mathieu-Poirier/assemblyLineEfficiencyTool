@@ -8,7 +8,7 @@ A full-stack project designed to visualize manufacturing efficiency by tracking 
 
 - Real-time data visualization using D3.js
 - WebSocket server
-- PostgreSQL database
+- PostgreSQL database connection
 
 ## Technology Stack
 
