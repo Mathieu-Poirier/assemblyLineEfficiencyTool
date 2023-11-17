@@ -80,3 +80,5 @@ const port = process.env.PORT || 3000;
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+// UPDATE efficiency SET parts_made = parts_made + 1, timestamp = NOW();

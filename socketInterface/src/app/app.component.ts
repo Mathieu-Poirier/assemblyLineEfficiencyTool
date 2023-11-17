@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { io } from 'socket.io-client';
-import * as d3 from 'd3'; // Import D3.js
+import * as d3 from 'd3';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +9,11 @@ import * as d3 from 'd3'; // Import D3.js
 })
 export class AppComponent implements OnInit {
   private socket: any;
+  public data: any[] = []; // Array to store data over time
   public partsMadePerMinute: number | null = null;
+  public svg: any;
+
+  @ViewChild('chartContainer', { static: true }) private chartContainer!: ElementRef;
 
   constructor() {
     this.socket = io('http://localhost:3000');
@@ -18,6 +22,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.socket.on('connect', () => {
       console.log('Connected to the server');
+      this.createChart();
     });
 
     let previousData: any = null; // Variable to store the previous data
@@ -35,6 +40,12 @@ export class AppComponent implements OnInit {
         const partsMadePerMinute = partsDifference / timeDifference;
         console.log('Parts Made Per Minute:', partsMadePerMinute);
         this.partsMadePerMinute = partsMadePerMinute;
+
+        // Update the data array
+        this.data.push(this.partsMadePerMinute);
+
+        // Update the chart
+        this.updateChart();
       }
 
       previousData = data;
@@ -44,4 +55,67 @@ export class AppComponent implements OnInit {
       console.log('Disconnected from the server');
     });
   }
+
+  private createChart() {
+    // Use Angular renderer to access the SVG container
+    const element = this.chartContainer.nativeElement;
+    
+    const width = 700;
+    const height = 400;
+
+    const svg = d3.select(element)
+      .append('svg')
+      .attr('width', width)
+      .attr('height', height);
+    
+
+    d3.select(element)
+    .style('display', 'flex')
+    .style('justify-content', 'center')
+    .style('min-height', '100vh')
+    .style('overflow', 'auto')
+    // Add any additional initialization code for your chart here
+    this.svg = svg;
+  }
+  
+  private updateChart() {
+    const maxBars = 10;
+  
+    // Assuming a simple bar chart
+    const barWidth = 40;
+    const barPadding = 10;
+  
+    const xScale = d3.scaleLinear()
+      .domain([0, this.data.length - 1])
+      .range([0, this.data.length * (barWidth + barPadding)]);
+  
+    const yScale = d3.scaleLinear()
+      .domain([0, d3.max(this.data)])
+      .range([400, 0]);
+  
+    // Select all existing bars
+    const bars = this.svg.selectAll('rect')
+      .data(this.data);
+  
+    // Exit: Remove bars that don't have data
+    bars.exit().remove();
+  
+    // Enter: Add new bars for new data
+    const newBars = bars.enter()
+      .append('rect')
+      .attr('fill', 'blue');
+  
+    // Update: Update the position and height of existing bars
+    bars.merge(newBars)
+      .attr('x', (__: any, i: number) => xScale(i))
+      .attr('y', (d: number) => yScale(d))
+      .attr('width', barWidth)
+      .attr('height', (d: number) => 400 - yScale(d));
+  
+    // Ensure not more than maxBars are displayed
+    if (this.data.length > maxBars) {
+      this.data.shift();
+    }
+  }  
 }
+
