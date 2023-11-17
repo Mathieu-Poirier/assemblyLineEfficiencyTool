@@ -146,7 +146,7 @@ export class AppComponent implements OnInit {
     .ease(d3.easeCubicInOut)
     .attr('x', (__: any, i: number) => xScale(i) + barWidth / 2)
     .attr('y', (d: number) => yScale(d) - 5) // Update the y-position based on yScale
-    .text((d: number) => Math.round(d).toString()); // Display rounded partsmadeper minute values
+    .text((d: number) => Math.round(d).toString()); // Display rounded parts made per minute values
   
     
       // Ensure not more than maxBars are displayed
