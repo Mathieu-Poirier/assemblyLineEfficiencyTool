@@ -18,17 +18,18 @@ Utilizes D3.js to dynamically render a bar chart representing "Parts Made Per Mi
 
 ## IV. Usage
 Prerequisites
-Android keyboard scanner
-Node.js and npm installed on the machine.
+- Android keyboard scanner
+- Node.js and npm installed on the machine.
+- Angular.js
 ### Installation
-Clone the repository.
-Navigate to the project directory.
-Add your PostgreSQL URI.
-Run npm install to install dependencies.
-Run ng serve to start the development server.
-Use the PySimpleGUI app to scan a barcode.
-Accessing the Tool
-Open a web browser and navigate to http://localhost:4200/ to access the Assembly Line Efficiency Tool.
+- Clone the repository.
+- Navigate to the project directory.
+- Add your PostgreSQL URI.
+- Run npm install to install dependencies.
+- Run ng serve to start the development server.
+- Use the PySimpleGUI app to scan a barcode.
+### Accessing the Tool
+- Open a web browser and navigate to http://localhost:4200/ to access the Assembly Line Efficiency Tool.
 
 ## V. Acknowledgments
 This project utilizes Angular, Socket.IO, and D3.js, acknowledging the contributions of their respective communities.
