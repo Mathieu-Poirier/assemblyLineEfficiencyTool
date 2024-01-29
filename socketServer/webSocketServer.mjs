@@ -19,13 +19,7 @@ app.use(cors());
 
 
 // Database configuration
-const dbConfig = {
-  user: 'postgres',
-  host: '127.0.0.1',
-  database: 'postgres',
-  password: 'yo',
-  port: 5432,
-};
+const dbConfig = {'YOUR_DB_CONFIG'};
 
 const pool = new pg.Pool(dbConfig);
 
