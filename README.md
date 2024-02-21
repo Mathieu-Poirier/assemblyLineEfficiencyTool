@@ -16,22 +16,6 @@ Establishes a WebSocket connection to receive real-time data updates from the se
 Real-time Data Visualization
 Utilizes D3.js to dynamically render a bar chart representing "Parts Made Per Minute" over time.
 
-## IV. Usage
-Prerequisites
-- Android keyboard scanner
-- Node.js and npm installed on the machine.
-- Angular.js
-### Installation
-- Clone the repository.
-- Navigate to the project directory.
-- Add your PostgreSQL URI.
-- Run npm install to install dependencies.
-- Run webSocketServer.mjs to start the development server.
-- Run ng serve to start the Angular front-end.
-- Use the PySimpleGUI app to scan a barcode.
-### Accessing the Tool
-- Open a web browser and navigate to http://localhost:4200/ to access the Assembly Line Efficiency Tool.
-
 ## V. Acknowledgments
 This project utilizes Angular, Socket.IO, and D3.js, acknowledging the contributions of their respective communities.
 
